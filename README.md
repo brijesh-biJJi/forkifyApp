@@ -14,8 +14,8 @@ Forkify Application is all about searching for Recipe or Ingredients & displayin
 
 ### Architecture
 
-![Recipe Loading](utils\forkify-architecture-recipe-loading.png)
+![Recipe Loading](forkify-architecture-recipe-loading.png)
 
 ### FlowChart
 
-![FlowChart](utils\forkify-flowchart-part-3.png)
+![FlowChart](forkify-flowchart-part-3.png)
