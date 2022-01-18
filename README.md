@@ -11,3 +11,8 @@ Forkify Application is all about searching for Recipe or Ingredients & displayin
 5. As a User, I want to be able to **_see my bookmarks & own recipes when I have the app & come back later_**, so that I can close the app safely after cooking.
 
 ## Features
+
+### Architecture
+
+![Recipe Loading](forkify-architecture-recipe-loading.png)
+![FlowChart](<D:\Adv_Project-(Post-Covid)\forkify-app\forkify-flowchart-part-3.png>)
