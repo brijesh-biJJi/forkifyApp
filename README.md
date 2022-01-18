@@ -13,13 +13,20 @@ Forkify Application is all about searching for Recipe or Ingredients & displayin
 ### Features
 
 - **Search for recipes**
-  - Input field to send request to _API_ with searched keywords.
+  - _Search functionality_: Input field to send request to _API_ with searched keywords.
   - Display results with _pagination_
   - Display _recipe_ with _Cooking Time_, _Servings_ & _Ingredients_.
 - **Update the number of servings**
+  - _Change servings functionality_: Update all ingredients according to current number of servings.
 - **Bookmark recipes**
+  - _Bookmark functionality_: display list of all bookmarked recipes.
 - **Create my own recipes**
+  - _User_ can upload own recipes.
+  - _User_ recipes will automatically be bookmarked, so that the _User_ can easily find all of their recipes.
+  - Each _user_ can only see their own recipes, not recipes from other _users_.
 - **See my bookmarks & own recipes when I have the app & come back later**
+  - Store bookmark data in the browser using _local storage_.
+  - On page load, read saved bookmarks from _local storage_ & display.
 
 ### FlowChart
 
