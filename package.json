@@ -1,0 +1,15 @@
+{
+  "name": "forkify",
+  "version": "1.0.0",
+  "description": "Forkify Application is all about searching for Recipe or Ingredients & displaying in user interface.",
+  "scripts": {
+    "start": "parcel index.html",
+    "build": "parcel build index.html"
+  },
+  "author": "AcmeKrsna",
+  "license": "ISC",
+  "devDependencies": {
+    "parcel-bundler": "^1.12.5",
+    "sass": "^1.48.0"
+  }
+}
