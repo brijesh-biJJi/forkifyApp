@@ -4,12 +4,46 @@ import { Fraction } from 'fractional';
 class RecipeView {
   #parentElement = document.querySelector('.recipe');
   #data;
+  #errorMessage = 'No recipes found for your query. Please try again!';
+  #message = 'Start by searching for a recipe or an ingredient. Have fun!';
 
   //Rendering the Recipe at first place
   addHandlerRender(handler) {
     // window.addEventListener('hashchange', controlRecipes);
     // window.addEventListener('load', controlRecipes);
     ['load', 'hashchange'].forEach(ev => window.addEventListener(ev, handler));
+  }
+
+  //Display Error Message
+  renderError(message = this.#errorMessage) {
+    const markup = `
+      <div class="error">
+        <div>
+          <svg>
+            <use href="${icons}#icon-alert-triangle"></use>
+          </svg>
+        </div>
+        <p>${message}</p>
+      </div>
+    `;
+    this.#clear();
+    this.#parentElement.insertAdjacentHTML('afterbegin', markup);
+  }
+
+  //Display Success Message
+  renderMessage(message = this.#message) {
+    const markup = `
+    <div class="message">
+    <div>
+      <svg>
+        <use href="${icons}#icon-smile"></use>
+      </svg>
+    </div>
+    <p>${message}</p>
+  </div>
+    `;
+    this.#clear();
+    this.#parentElement.insertAdjacentHTML('afterbegin', markup);
   }
 
   render(data) {
@@ -19,7 +53,7 @@ class RecipeView {
     this.#parentElement.insertAdjacentHTML('afterbegin', markup);
   }
 
-  renderSpinner = function () {
+  renderSpinner() {
     const markup = `
           <div class="spinner">
             <svg>
@@ -29,7 +63,7 @@ class RecipeView {
         `;
     this.#clear();
     this.#parentElement.insertAdjacentHTML('afterbegin', markup);
-  };
+  }
 
   #clear() {
     this.#parentElement.innerHTML = '';

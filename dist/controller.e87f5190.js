@@ -1000,16 +1000,17 @@ var loadRecipe = /*#__PURE__*/function () {
               cookingTime: recipe.cooking_time,
               ingredients: recipe.ingredients
             };
-            _context.next = 11;
+            _context.next = 12;
             break;
 
           case 8:
             _context.prev = 8;
             _context.t0 = _context["catch"](0);
             //Temp Error Handling
-            console.error("".concat(_context.t0, "!!!"));
+            console.error("".concat(_context.t0, "!"));
+            throw _context.t0;
 
-          case 11:
+          case 12:
           case "end":
             return _context.stop();
         }
@@ -1416,27 +1417,29 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 function _classPrivateMethodInitSpec(obj, privateSet) { _checkPrivateRedeclaration(obj, privateSet); privateSet.add(obj); }
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 function _classPrivateFieldInitSpec(obj, privateMap, value) { _checkPrivateRedeclaration(obj, privateMap); privateMap.set(obj, value); }
 
 function _checkPrivateRedeclaration(obj, privateCollection) { if (privateCollection.has(obj)) { throw new TypeError("Cannot initialize the same private elements twice on an object"); } }
 
-function _classPrivateFieldGet(receiver, privateMap) { var descriptor = _classExtractFieldDescriptor(receiver, privateMap, "get"); return _classApplyDescriptorGet(receiver, descriptor); }
+function _classPrivateFieldSet(receiver, privateMap, value) { var descriptor = _classExtractFieldDescriptor(receiver, privateMap, "set"); _classApplyDescriptorSet(receiver, descriptor, value); return value; }
 
-function _classApplyDescriptorGet(receiver, descriptor) { if (descriptor.get) { return descriptor.get.call(receiver); } return descriptor.value; }
+function _classApplyDescriptorSet(receiver, descriptor, value) { if (descriptor.set) { descriptor.set.call(receiver, value); } else { if (!descriptor.writable) { throw new TypeError("attempted to set read only private field"); } descriptor.value = value; } }
 
 function _classPrivateMethodGet(receiver, privateSet, fn) { if (!privateSet.has(receiver)) { throw new TypeError("attempted to get private field on non-instance"); } return fn; }
 
-function _classPrivateFieldSet(receiver, privateMap, value) { var descriptor = _classExtractFieldDescriptor(receiver, privateMap, "set"); _classApplyDescriptorSet(receiver, descriptor, value); return value; }
+function _classPrivateFieldGet(receiver, privateMap) { var descriptor = _classExtractFieldDescriptor(receiver, privateMap, "get"); return _classApplyDescriptorGet(receiver, descriptor); }
 
 function _classExtractFieldDescriptor(receiver, privateMap, action) { if (!privateMap.has(receiver)) { throw new TypeError("attempted to " + action + " private field on non-instance"); } return privateMap.get(receiver); }
 
-function _classApplyDescriptorSet(receiver, descriptor, value) { if (descriptor.set) { descriptor.set.call(receiver, value); } else { if (!descriptor.writable) { throw new TypeError("attempted to set read only private field"); } descriptor.value = value; } }
+function _classApplyDescriptorGet(receiver, descriptor) { if (descriptor.get) { return descriptor.get.call(receiver); } return descriptor.value; }
 
 var _parentElement = /*#__PURE__*/new WeakMap();
 
 var _data = /*#__PURE__*/new WeakMap();
+
+var _errorMessage = /*#__PURE__*/new WeakMap();
+
+var _message = /*#__PURE__*/new WeakMap();
 
 var _clear = /*#__PURE__*/new WeakSet();
 
@@ -1464,12 +1467,14 @@ var RecipeView = /*#__PURE__*/function () {
       value: void 0
     });
 
-    _defineProperty(this, "renderSpinner", function () {
-      var markup = "\n          <div class=\"spinner\">\n            <svg>\n              <use href=\"".concat(_icons.default, "#icon-loader\"></use>\n            </svg>\n          </div>\n        ");
+    _classPrivateFieldInitSpec(this, _errorMessage, {
+      writable: true,
+      value: 'No recipes found for your query. Please try again!'
+    });
 
-      _classPrivateMethodGet(this, _clear, _clear2).call(this);
-
-      _classPrivateFieldGet(this, _parentElement).insertAdjacentHTML('afterbegin', markup);
+    _classPrivateFieldInitSpec(this, _message, {
+      writable: true,
+      value: 'Start by searching for a recipe or an ingredient. Have fun!'
     });
   }
 
@@ -1482,6 +1487,28 @@ var RecipeView = /*#__PURE__*/function () {
       ['load', 'hashchange'].forEach(function (ev) {
         return window.addEventListener(ev, handler);
       });
+    } //Display Error Message
+
+  }, {
+    key: "renderError",
+    value: function renderError() {
+      var message = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _classPrivateFieldGet(this, _errorMessage);
+      var markup = "\n      <div class=\"error\">\n        <div>\n          <svg>\n            <use href=\"".concat(_icons.default, "#icon-alert-triangle\"></use>\n          </svg>\n        </div>\n        <p>").concat(message, "</p>\n      </div>\n    ");
+
+      _classPrivateMethodGet(this, _clear, _clear2).call(this);
+
+      _classPrivateFieldGet(this, _parentElement).insertAdjacentHTML('afterbegin', markup);
+    } //Display Success Message
+
+  }, {
+    key: "renderMessage",
+    value: function renderMessage() {
+      var message = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _classPrivateFieldGet(this, _message);
+      var markup = "\n    <div class=\"message\">\n    <div>\n      <svg>\n        <use href=\"".concat(_icons.default, "#icon-smile\"></use>\n      </svg>\n    </div>\n    <p>").concat(message, "</p>\n  </div>\n    ");
+
+      _classPrivateMethodGet(this, _clear, _clear2).call(this);
+
+      _classPrivateFieldGet(this, _parentElement).insertAdjacentHTML('afterbegin', markup);
     }
   }, {
     key: "render",
@@ -1489,6 +1516,15 @@ var RecipeView = /*#__PURE__*/function () {
       _classPrivateFieldSet(this, _data, data);
 
       var markup = _classPrivateMethodGet(this, _generateMarkup, _generateMarkup2).call(this);
+
+      _classPrivateMethodGet(this, _clear, _clear2).call(this);
+
+      _classPrivateFieldGet(this, _parentElement).insertAdjacentHTML('afterbegin', markup);
+    }
+  }, {
+    key: "renderSpinner",
+    value: function renderSpinner() {
+      var markup = "\n          <div class=\"spinner\">\n            <svg>\n              <use href=\"".concat(_icons.default, "#icon-loader\"></use>\n            </svg>\n          </div>\n        ");
 
       _classPrivateMethodGet(this, _clear, _clear2).call(this);
 
@@ -1569,7 +1605,8 @@ var controlRecipes = /*#__PURE__*/function () {
           case 10:
             _context.prev = 10;
             _context.t0 = _context["catch"](0);
-            console.error("".concat(_context.t0));
+
+            _recipeView.default.renderError();
 
           case 13:
           case "end":
