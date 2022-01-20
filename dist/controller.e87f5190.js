@@ -1474,6 +1474,16 @@ var RecipeView = /*#__PURE__*/function () {
   }
 
   _createClass(RecipeView, [{
+    key: "addHandlerRender",
+    value: //Rendering the Recipe at first place
+    function addHandlerRender(handler) {
+      // window.addEventListener('hashchange', controlRecipes);
+      // window.addEventListener('load', controlRecipes);
+      ['load', 'hashchange'].forEach(function (ev) {
+        return window.addEventListener(ev, handler);
+      });
+    }
+  }, {
     key: "render",
     value: function render(data) {
       _classPrivateFieldSet(this, _data, data);
@@ -1572,13 +1582,13 @@ var controlRecipes = /*#__PURE__*/function () {
   return function controlRecipes() {
     return _ref.apply(this, arguments);
   };
-}(); // window.addEventListener('hashchange', controlRecipes);
-// window.addEventListener('load', controlRecipes);
+}();
 
+var init = function init() {
+  _recipeView.default.addHandlerRender(controlRecipes);
+};
 
-['load', 'hashchange'].forEach(function (ev) {
-  return window.addEventListener(ev, controlRecipes);
-});
+init();
 },{"regenerator-runtime/runtime":"node_modules/regenerator-runtime/runtime.js","./model":"src/js/model.js","./views/recipeView":"src/js/views/recipeView.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
