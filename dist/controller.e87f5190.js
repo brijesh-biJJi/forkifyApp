@@ -15183,25 +15183,586 @@ try {
   }
 }
 
+},{}],"src/js/model.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.state = exports.loadRecipe = void 0;
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+var state = {
+  recipe: {}
+};
+exports.state = state;
+
+var loadRecipe = /*#__PURE__*/function () {
+  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(id) {
+    var res, data, recipe;
+    return regeneratorRuntime.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            _context.prev = 0;
+            _context.next = 3;
+            return fetch("https://forkify-api.herokuapp.com/api/v2/recipes/".concat(id));
+
+          case 3:
+            res = _context.sent;
+            _context.next = 6;
+            return res.json();
+
+          case 6:
+            data = _context.sent;
+
+            if (res.ok) {
+              _context.next = 9;
+              break;
+            }
+
+            throw new Error("".concat(data.message, " (").concat(res.status, ")"));
+
+          case 9:
+            recipe = data.data.recipe;
+            state.recipe = {
+              id: recipe.id,
+              title: recipe.title,
+              publisher: recipe.publisher,
+              sourceUrl: recipe.source_url,
+              image: recipe.image_url,
+              servings: recipe.servings,
+              cookingTime: recipe.cooking_time,
+              ingredients: recipe.ingredients
+            };
+            _context.next = 16;
+            break;
+
+          case 13:
+            _context.prev = 13;
+            _context.t0 = _context["catch"](0);
+            alert(_context.t0);
+
+          case 16:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee, null, [[0, 13]]);
+  }));
+
+  return function loadRecipe(_x) {
+    return _ref.apply(this, arguments);
+  };
+}();
+
+exports.loadRecipe = loadRecipe;
 },{}],"src/img/icons.svg":[function(require,module,exports) {
 module.exports = "/icons.ae3c38d5.svg";
-},{}],"src/js/controller.js":[function(require,module,exports) {
+},{}],"node_modules/fractional/index.js":[function(require,module,exports) {
+/*
+fraction.js
+A Javascript fraction library.
+
+Copyright (c) 2009  Erik Garrison <erik@hypervolu.me>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+*/
+
+
+/* Fractions */
+/* 
+ *
+ * Fraction objects are comprised of a numerator and a denomenator.  These
+ * values can be accessed at fraction.numerator and fraction.denomenator.
+ *
+ * Fractions are always returned and stored in lowest-form normalized format.
+ * This is accomplished via Fraction.normalize.
+ *
+ * The following mathematical operations on fractions are supported:
+ *
+ * Fraction.equals
+ * Fraction.add
+ * Fraction.subtract
+ * Fraction.multiply
+ * Fraction.divide
+ *
+ * These operations accept both numbers and fraction objects.  (Best results
+ * are guaranteed when the input is a fraction object.)  They all return a new
+ * Fraction object.
+ *
+ * Usage:
+ *
+ * TODO
+ *
+ */
+
+/*
+ * The Fraction constructor takes one of:
+ *   an explicit numerator (integer) and denominator (integer),
+ *   a string representation of the fraction (string),
+ *   or a floating-point number (float)
+ *
+ * These initialization methods are provided for convenience.  Because of
+ * rounding issues the best results will be given when the fraction is
+ * constructed from an explicit integer numerator and denomenator, and not a
+ * decimal number.
+ *
+ *
+ * e.g. new Fraction(1, 2) --> 1/2
+ *      new Fraction('1/2') --> 1/2
+ *      new Fraction('2 3/4') --> 11/4  (prints as 2 3/4)
+ *
+ */
+Fraction = function(numerator, denominator)
+{
+    /* double argument invocation */
+    if (typeof numerator !== 'undefined' && denominator) {
+        if (typeof(numerator) === 'number' && typeof(denominator) === 'number') {
+            this.numerator = numerator;
+            this.denominator = denominator;
+        } else if (typeof(numerator) === 'string' && typeof(denominator) === 'string') {
+            // what are they?
+            // hmm....
+            // assume they are ints?
+            this.numerator = parseInt(numerator);
+            this.denominator = parseInt(denominator);
+        }
+    /* single-argument invocation */
+    } else if (typeof denominator === 'undefined') {
+        num = numerator; // swap variable names for legibility
+        if (typeof(num) === 'number') {  // just a straight number init
+            this.numerator = num;
+            this.denominator = 1;
+        } else if (typeof(num) === 'string') {
+            var a, b;  // hold the first and second part of the fraction, e.g. a = '1' and b = '2/3' in 1 2/3
+                       // or a = '2/3' and b = undefined if we are just passed a single-part number
+            var arr = num.split(' ')
+            if (arr[0]) a = arr[0]
+            if (arr[1]) b = arr[1]
+            /* compound fraction e.g. 'A B/C' */
+            //  if a is an integer ...
+            if (a % 1 === 0 && b && b.match('/')) {
+                return (new Fraction(a)).add(new Fraction(b));
+            } else if (a && !b) {
+                /* simple fraction e.g. 'A/B' */
+                if (typeof(a) === 'string' && a.match('/')) {
+                    // it's not a whole number... it's actually a fraction without a whole part written
+                    var f = a.split('/');
+                    this.numerator = f[0]; this.denominator = f[1];
+                /* string floating point */
+                } else if (typeof(a) === 'string' && a.match('\.')) {
+                    return new Fraction(parseFloat(a));
+                /* whole number e.g. 'A' */
+                } else { // just passed a whole number as a string
+                    this.numerator = parseInt(a);
+                    this.denominator = 1;
+                }
+            } else {
+                return undefined; // could not parse
+            }
+        }
+    }
+    this.normalize();
+}
+
+
+Fraction.prototype.clone = function()
+{
+    return new Fraction(this.numerator, this.denominator);
+}
+
+
+/* pretty-printer, converts fractions into whole numbers and fractions */
+Fraction.prototype.toString = function()
+{
+    if (this.denominator==='NaN') return 'NaN'
+    var wholepart = (this.numerator/this.denominator>0) ?
+      Math.floor(this.numerator / this.denominator) :
+      Math.ceil(this.numerator / this.denominator)
+    var numerator = this.numerator % this.denominator 
+    var denominator = this.denominator;
+    var result = []; 
+    if (wholepart != 0)  
+        result.push(wholepart);
+    if (numerator != 0)  
+        result.push(((wholepart===0) ? numerator : Math.abs(numerator)) + '/' + denominator);
+    return result.length > 0 ? result.join(' ') : 0;
+}
+
+
+/* destructively rescale the fraction by some integral factor */
+Fraction.prototype.rescale = function(factor)
+{
+    this.numerator *= factor;
+    this.denominator *= factor;
+    return this;
+}
+
+
+Fraction.prototype.add = function(b)
+{
+    var a = this.clone();
+    if (b instanceof Fraction) {
+        b = b.clone();
+    } else {
+        b = new Fraction(b);
+    }
+    td = a.denominator;
+    a.rescale(b.denominator);
+    b.rescale(td);
+
+    a.numerator += b.numerator;
+
+    return a.normalize();
+}
+
+
+Fraction.prototype.subtract = function(b)
+{
+    var a = this.clone();
+    if (b instanceof Fraction) {
+        b = b.clone();  // we scale our argument destructively, so clone
+    } else {
+        b = new Fraction(b);
+    }
+    td = a.denominator;
+    a.rescale(b.denominator);
+    b.rescale(td);
+
+    a.numerator -= b.numerator;
+
+    return a.normalize();
+}
+
+
+Fraction.prototype.multiply = function(b)
+{
+    var a = this.clone();
+    if (b instanceof Fraction)
+    {
+        a.numerator *= b.numerator;
+        a.denominator *= b.denominator;
+    } else if (typeof b === 'number') {
+        a.numerator *= b;
+    } else {
+        return a.multiply(new Fraction(b));
+    }
+    return a.normalize();
+}
+
+Fraction.prototype.divide = function(b)
+{
+    var a = this.clone();
+    if (b instanceof Fraction)
+    {
+        a.numerator *= b.denominator;
+        a.denominator *= b.numerator;
+    } else if (typeof b === 'number') {
+        a.denominator *= b;
+    } else {
+        return a.divide(new Fraction(b));
+    }
+    return a.normalize();
+}
+
+Fraction.prototype.equals = function(b)
+{
+    if (!(b instanceof Fraction)) {
+        b = new Fraction(b);
+    }
+    // fractions that are equal should have equal normalized forms
+    var a = this.clone().normalize();
+    var b = b.clone().normalize();
+    return (a.numerator === b.numerator && a.denominator === b.denominator);
+}
+
+
+/* Utility functions */
+
+/* Destructively normalize the fraction to its smallest representation. 
+ * e.g. 4/16 -> 1/4, 14/28 -> 1/2, etc.
+ * This is called after all math ops.
+ */
+Fraction.prototype.normalize = (function()
+{
+
+    var isFloat = function(n)
+    {
+        return (typeof(n) === 'number' && 
+                ((n > 0 && n % 1 > 0 && n % 1 < 1) || 
+                 (n < 0 && n % -1 < 0 && n % -1 > -1))
+               );
+    }
+
+    var roundToPlaces = function(n, places) 
+    {
+        if (!places) {
+            return Math.round(n);
+        } else {
+            var scalar = Math.pow(10, places);
+            return Math.round(n*scalar)/scalar;
+        }
+    }
+        
+    return (function() {
+
+        // XXX hackish.  Is there a better way to address this issue?
+        //
+        /* first check if we have decimals, and if we do eliminate them
+         * multiply by the 10 ^ number of decimal places in the number
+         * round the number to nine decimal places
+         * to avoid js floating point funnies
+         */
+        if (isFloat(this.denominator)) {
+            var rounded = roundToPlaces(this.denominator, 9);
+            var scaleup = Math.pow(10, rounded.toString().split('.')[1].length);
+            this.denominator = Math.round(this.denominator * scaleup); // this !!! should be a whole number
+            //this.numerator *= scaleup;
+            this.numerator *= scaleup;
+        } 
+        if (isFloat(this.numerator)) {
+            var rounded = roundToPlaces(this.numerator, 9);
+            var scaleup = Math.pow(10, rounded.toString().split('.')[1].length);
+            this.numerator = Math.round(this.numerator * scaleup); // this !!! should be a whole number
+            //this.numerator *= scaleup;
+            this.denominator *= scaleup;
+        }
+        var gcf = Fraction.gcf(this.numerator, this.denominator);
+        this.numerator /= gcf;
+        this.denominator /= gcf;
+        if ((this.numerator < 0 && this.denominator < 0) || (this.numerator > 0 && this.denominator < 0)) {
+            this.numerator *= -1;
+            this.denominator *= -1;
+        }
+        return this;
+    });
+
+})();
+
+
+/* Takes two numbers and returns their greatest common factor.
+ */
+Fraction.gcf = function(a, b)
+{
+
+    var common_factors = [];
+    var fa = Fraction.primeFactors(a);
+    var fb = Fraction.primeFactors(b);
+    // for each factor in fa
+    // if it's also in fb
+    // put it into the common factors
+    fa.forEach(function (factor) 
+    { 
+        var i = fb.indexOf(factor);
+        if (i >= 0) {
+            common_factors.push(factor);
+            fb.splice(i,1); // remove from fb
+        }
+    });
+
+    if (common_factors.length === 0)
+        return 1;
+
+    var gcf = (function() {
+        var r = common_factors[0];
+        var i;
+        for (i=1;i<common_factors.length;i++)
+        {
+            r = r * common_factors[i];
+        }
+        return r;
+    })();
+
+    return gcf;
+
+};
+
+
+// Adapted from: 
+// http://www.btinternet.com/~se16/js/factor.htm
+Fraction.primeFactors = function(n) 
+{
+
+    var num = Math.abs(n);
+    var factors = [];
+    var _factor = 2;  // first potential prime factor
+
+    while (_factor * _factor <= num)  // should we keep looking for factors?
+    {      
+      if (num % _factor === 0)  // this is a factor
+        { 
+            factors.push(_factor);  // so keep it
+            num = num/_factor;  // and divide our search point by it
+        }
+        else
+        {
+            _factor++;  // and increment
+        }
+    }
+
+    if (num != 1)                    // If there is anything left at the end...
+    {                                // ...this must be the last prime factor
+        factors.push(num);           //    so it too should be recorded
+    }
+
+    return factors;                  // Return the prime factors
+}
+
+module.exports.Fraction = Fraction
+
+},{}],"src/js/views/recipeView.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _icons = _interopRequireDefault(require("../../img/icons.svg"));
+
+var _fractional = require("fractional");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+
+function _classPrivateMethodInitSpec(obj, privateSet) { _checkPrivateRedeclaration(obj, privateSet); privateSet.add(obj); }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _classPrivateFieldInitSpec(obj, privateMap, value) { _checkPrivateRedeclaration(obj, privateMap); privateMap.set(obj, value); }
+
+function _checkPrivateRedeclaration(obj, privateCollection) { if (privateCollection.has(obj)) { throw new TypeError("Cannot initialize the same private elements twice on an object"); } }
+
+function _classPrivateFieldGet(receiver, privateMap) { var descriptor = _classExtractFieldDescriptor(receiver, privateMap, "get"); return _classApplyDescriptorGet(receiver, descriptor); }
+
+function _classApplyDescriptorGet(receiver, descriptor) { if (descriptor.get) { return descriptor.get.call(receiver); } return descriptor.value; }
+
+function _classPrivateMethodGet(receiver, privateSet, fn) { if (!privateSet.has(receiver)) { throw new TypeError("attempted to get private field on non-instance"); } return fn; }
+
+function _classPrivateFieldSet(receiver, privateMap, value) { var descriptor = _classExtractFieldDescriptor(receiver, privateMap, "set"); _classApplyDescriptorSet(receiver, descriptor, value); return value; }
+
+function _classExtractFieldDescriptor(receiver, privateMap, action) { if (!privateMap.has(receiver)) { throw new TypeError("attempted to " + action + " private field on non-instance"); } return privateMap.get(receiver); }
+
+function _classApplyDescriptorSet(receiver, descriptor, value) { if (descriptor.set) { descriptor.set.call(receiver, value); } else { if (!descriptor.writable) { throw new TypeError("attempted to set read only private field"); } descriptor.value = value; } }
+
+var _parentElement = /*#__PURE__*/new WeakMap();
+
+var _data = /*#__PURE__*/new WeakMap();
+
+var _clear = /*#__PURE__*/new WeakSet();
+
+var _generateMarkup = /*#__PURE__*/new WeakSet();
+
+var _generateMarkupIngredient = /*#__PURE__*/new WeakSet();
+
+var RecipeView = /*#__PURE__*/function () {
+  function RecipeView() {
+    _classCallCheck(this, RecipeView);
+
+    _classPrivateMethodInitSpec(this, _generateMarkupIngredient);
+
+    _classPrivateMethodInitSpec(this, _generateMarkup);
+
+    _classPrivateMethodInitSpec(this, _clear);
+
+    _classPrivateFieldInitSpec(this, _parentElement, {
+      writable: true,
+      value: document.querySelector('.recipe')
+    });
+
+    _classPrivateFieldInitSpec(this, _data, {
+      writable: true,
+      value: void 0
+    });
+
+    _defineProperty(this, "renderSpinner", function () {
+      var markup = "\n          <div class=\"spinner\">\n            <svg>\n              <use href=\"".concat(_icons.default, "#icon-loader\"></use>\n            </svg>\n          </div>\n        ");
+
+      _classPrivateMethodGet(this, _clear, _clear2).call(this);
+
+      _classPrivateFieldGet(this, _parentElement).insertAdjacentHTML('afterbegin', markup);
+    });
+  }
+
+  _createClass(RecipeView, [{
+    key: "render",
+    value: function render(data) {
+      _classPrivateFieldSet(this, _data, data);
+
+      var markup = _classPrivateMethodGet(this, _generateMarkup, _generateMarkup2).call(this);
+
+      _classPrivateMethodGet(this, _clear, _clear2).call(this);
+
+      _classPrivateFieldGet(this, _parentElement).insertAdjacentHTML('afterbegin', markup);
+    }
+  }]);
+
+  return RecipeView;
+}();
+
+function _clear2() {
+  _classPrivateFieldGet(this, _parentElement).innerHTML = '';
+}
+
+function _generateMarkup2() {
+  return "\n        <figure class=\"recipe__fig\">\n        <img src=\"".concat(_classPrivateFieldGet(this, _data).image, "\" alt=\"").concat(_classPrivateFieldGet(this, _data).title, "\" class=\"recipe__img\" />\n        <h1 class=\"recipe__title\">\n          <span>").concat(_classPrivateFieldGet(this, _data).title, "</span>\n        </h1>\n      </figure>\n\n      <div class=\"recipe__details\">\n        <div class=\"recipe__info\">\n          <svg class=\"recipe__info-icon\">\n            <use href=\"").concat(_icons.default, "#icon-clock\"></use>\n          </svg>\n          <span class=\"recipe__info-data recipe__info-data--minutes\">").concat(_classPrivateFieldGet(this, _data).cookingTime, "</span>\n          <span class=\"recipe__info-text\">minutes</span>\n        </div>\n        <div class=\"recipe__info\">\n          <svg class=\"recipe__info-icon\">\n            <use href=\"").concat(_icons.default, "#icon-users\"></use>\n          </svg>\n          <span class=\"recipe__info-data recipe__info-data--people\">").concat(_classPrivateFieldGet(this, _data).servings, "</span>\n          <span class=\"recipe__info-text\">servings</span>\n\n          <div class=\"recipe__info-buttons\">\n            <button class=\"btn--tiny btn--increase-servings\">\n              <svg>\n                <use href=\"").concat(_icons.default, "#icon-minus-circle\"></use>\n              </svg>\n            </button>\n            <button class=\"btn--tiny btn--increase-servings\">\n              <svg>\n                <use href=\"").concat(_icons.default, "#icon-plus-circle\"></use>\n              </svg>\n            </button>\n          </div>\n        </div>\n\n        <div class=\"recipe__user-generated\">\n          <svg>\n            <use href=\"").concat(_icons.default, "#icon-user\"></use>\n          </svg>\n        </div>\n        <button class=\"btn--round\">\n          <svg class=\"\">\n            <use href=\"").concat(_icons.default, "#icon-bookmark-fill\"></use>\n          </svg>\n        </button>\n      </div>\n\n      <div class=\"recipe__ingredients\">\n        <h2 class=\"heading--2\">Recipe ingredients</h2>\n        <ul class=\"recipe__ingredient-list\">\n        ").concat(_classPrivateFieldGet(this, _data).ingredients.map(_classPrivateMethodGet(this, _generateMarkupIngredient, _generateMarkupIngredient2)).join(''), "\n        </ul>\n      </div>\n\n      <div class=\"recipe__directions\">\n        <h2 class=\"heading--2\">How to cook it</h2>\n        <p class=\"recipe__directions-text\">\n          This recipe was carefully designed and tested by\n          <span class=\"recipe__publisher\">").concat(_classPrivateFieldGet(this, _data).publisher, "</span>. Please check out\n          directions at their website.\n        </p>\n        <a\n          class=\"btn--small recipe__btn\"\n          href=\"").concat(_classPrivateFieldGet(this, _data).sourceUrl, "\"\n          target=\"_blank\"\n        >\n          <span>Directions</span>\n          <svg class=\"search__icon\">\n            <use href=\"").concat(_icons.default, "#icon-arrow-right\"></use>\n          </svg>\n        </a>\n      </div>\n        ");
+}
+
+function _generateMarkupIngredient2(ingredient) {
+  return "\n    <li class=\"recipe__ingredient\">\n      <svg class=\"recipe__icon\">\n        <use href=\"".concat(_icons.default, "#icon-check\"></use>\n      </svg>\n      <div class=\"recipe__quantity\">").concat(ingredient.quantity ? new _fractional.Fraction(ingredient.quantity).toString() : '', "</div>\n      <div class=\"recipe__description\">\n        <span class=\"recipe__unit\">").concat(ingredient.unit, "</span>\n        ").concat(ingredient.description, "\n      </div>\n    </li>\n    ");
+}
+
+var _default = new RecipeView();
+
+exports.default = _default;
+},{"../../img/icons.svg":"src/img/icons.svg","fractional":"node_modules/fractional/index.js"}],"src/js/controller.js":[function(require,module,exports) {
 "use strict";
 
 require("core-js/stable");
 
 require("regenerator-runtime/runtime");
 
-var _icons = _interopRequireDefault(require("../img/icons.svg"));
+var model = _interopRequireWildcard(require("./model"));
+
+var _recipeView = _interopRequireDefault(require("./views/recipeView"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
-var recipeContainer = document.querySelector('.recipe');
-
+// const recipeContainer = document.querySelector('.recipe');
 var timeout = function timeout(s) {
   return new Promise(function (_, reject) {
     setTimeout(function () {
@@ -15212,15 +15773,9 @@ var timeout = function timeout(s) {
 ///////////////////////////////////////
 
 
-var renderSpinner = function renderSpinner(parentEl) {
-  var markup = "\n    <div class=\"spinner\">\n      <svg>\n        <use href=\"".concat(_icons.default, "#icon-loader\"></use>\n      </svg>\n    </div>\n  ");
-  parentEl.innerHTML = '';
-  parentEl.insertAdjacentHTML('afterbegin', markup);
-};
-
-var showRecipe = /*#__PURE__*/function () {
+var controlRecipes = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-    var id, res, data, recipe, markUp;
+    var id;
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
@@ -15236,72 +15791,43 @@ var showRecipe = /*#__PURE__*/function () {
             return _context.abrupt("return");
 
           case 4:
-            // 1. Loading Recipe
-            renderSpinner(recipeContainer);
+            _recipeView.default.renderSpinner(); // 1. Loading Recipe
+
+
             _context.next = 7;
-            return fetch("https://forkify-api.herokuapp.com/api/v2/recipes/".concat(id));
+            return model.loadRecipe(id);
 
           case 7:
-            res = _context.sent;
-            _context.next = 10;
-            return res.json();
+            // 2. Rendering Recipe
+            _recipeView.default.render(model.state.recipe);
 
-          case 10:
-            data = _context.sent;
-
-            if (res.ok) {
-              _context.next = 13;
-              break;
-            }
-
-            throw new Error("".concat(data.message, " (").concat(res.status, ")"));
-
-          case 13:
-            recipe = data.data.recipe;
-            recipe = {
-              id: recipe.id,
-              title: recipe.title,
-              publisher: recipe.publisher,
-              sourceUrl: recipe.source_url,
-              image: recipe.image_url,
-              servings: recipe.servings,
-              cookingTime: recipe.cooking_time,
-              ingredients: recipe.ingredients
-            }; // 2. Rendering Recipe
-
-            markUp = "\n      <figure class=\"recipe__fig\">\n        <img src=\"".concat(recipe.image, "\" alt=\"").concat(recipe.title, "\" class=\"recipe__img\" />\n        <h1 class=\"recipe__title\">\n          <span>").concat(recipe.title, "</span>\n        </h1>\n      </figure>\n\n      <div class=\"recipe__details\">\n        <div class=\"recipe__info\">\n          <svg class=\"recipe__info-icon\">\n            <use href=\"").concat(_icons.default, "#icon-clock\"></use>\n          </svg>\n          <span class=\"recipe__info-data recipe__info-data--minutes\">").concat(recipe.cookingTime, "</span>\n          <span class=\"recipe__info-text\">minutes</span>\n        </div>\n        <div class=\"recipe__info\">\n          <svg class=\"recipe__info-icon\">\n            <use href=\"").concat(_icons.default, "#icon-users\"></use>\n          </svg>\n          <span class=\"recipe__info-data recipe__info-data--people\">").concat(recipe.servings, "</span>\n          <span class=\"recipe__info-text\">servings</span>\n\n          <div class=\"recipe__info-buttons\">\n            <button class=\"btn--tiny btn--increase-servings\">\n              <svg>\n                <use href=\"").concat(_icons.default, "#icon-minus-circle\"></use>\n              </svg>\n            </button>\n            <button class=\"btn--tiny btn--increase-servings\">\n              <svg>\n                <use href=\"").concat(_icons.default, "#icon-plus-circle\"></use>\n              </svg>\n            </button>\n          </div>\n        </div>\n\n        <div class=\"recipe__user-generated\">\n          <svg>\n            <use href=\"").concat(_icons.default, "#icon-user\"></use>\n          </svg>\n        </div>\n        <button class=\"btn--round\">\n          <svg class=\"\">\n            <use href=\"").concat(_icons.default, "#icon-bookmark-fill\"></use>\n          </svg>\n        </button>\n      </div>\n\n      <div class=\"recipe__ingredients\">\n        <h2 class=\"heading--2\">Recipe ingredients</h2>\n        <ul class=\"recipe__ingredient-list\">\n        ").concat(recipe.ingredients.map(function (ing) {
-              return "\n          <li class=\"recipe__ingredient\">\n            <svg class=\"recipe__icon\">\n              <use href=\"".concat(_icons.default, "#icon-check\"></use>\n            </svg>\n            <div class=\"recipe__quantity\">").concat(ing.quantity, "</div>\n            <div class=\"recipe__description\">\n              <span class=\"recipe__unit\">").concat(ing.unit, "</span>\n              ").concat(ing.description, "\n            </div>\n          </li>\n          ");
-            }).join(''), "\n        </ul>\n      </div>\n\n      <div class=\"recipe__directions\">\n        <h2 class=\"heading--2\">How to cook it</h2>\n        <p class=\"recipe__directions-text\">\n          This recipe was carefully designed and tested by\n          <span class=\"recipe__publisher\">").concat(recipe.publisher, "</span>. Please check out\n          directions at their website.\n        </p>\n        <a\n          class=\"btn--small recipe__btn\"\n          href=\"").concat(recipe.sourceUrl, "\"\n          target=\"_blank\"\n        >\n          <span>Directions</span>\n          <svg class=\"search__icon\">\n            <use href=\"").concat(_icons.default, "#icon-arrow-right\"></use>\n          </svg>\n        </a>\n      </div>\n    \n    ");
-            recipeContainer.innerHTML = '';
-            recipeContainer.insertAdjacentHTML('afterbegin', markUp);
-            _context.next = 23;
+            _context.next = 13;
             break;
 
-          case 20:
-            _context.prev = 20;
+          case 10:
+            _context.prev = 10;
             _context.t0 = _context["catch"](0);
-            console.error(_context.t0);
+            alert(_context.t0);
 
-          case 23:
+          case 13:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, null, [[0, 20]]);
+    }, _callee, null, [[0, 10]]);
   }));
 
-  return function showRecipe() {
+  return function controlRecipes() {
     return _ref.apply(this, arguments);
   };
-}();
+}(); // window.addEventListener('hashchange', controlRecipes);
+// window.addEventListener('load', controlRecipes);
 
-showRecipe(); // window.addEventListener('hashchange', showRecipe);
-// window.addEventListener('load', showRecipe);
 
 ['load', 'hashchange'].forEach(function (ev) {
-  return window.addEventListener(ev, showRecipe);
+  return window.addEventListener(ev, controlRecipes);
 });
-},{"core-js/stable":"node_modules/core-js/stable/index.js","regenerator-runtime/runtime":"node_modules/regenerator-runtime/runtime.js","../img/icons.svg":"src/img/icons.svg"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"core-js/stable":"node_modules/core-js/stable/index.js","regenerator-runtime/runtime":"node_modules/regenerator-runtime/runtime.js","./model":"src/js/model.js","./views/recipeView":"src/js/views/recipeView.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -15329,7 +15855,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50705" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51601" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
