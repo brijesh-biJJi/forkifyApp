@@ -1446,7 +1446,88 @@ Fraction.primeFactors = function(n)
 
 module.exports.Fraction = Fraction
 
-},{}],"src/js/views/recipeView.js":[function(require,module,exports) {
+},{}],"src/js/views/View.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _icons = _interopRequireDefault(require("../../img/icons.svg"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var View = /*#__PURE__*/function () {
+  function View() {
+    _classCallCheck(this, View);
+
+    _defineProperty(this, "_data", void 0);
+  }
+
+  _createClass(View, [{
+    key: "render",
+    value: function render(data) {
+      if (!data || Array.isArray(data) && data.length === 0) return this.renderError();
+      this._data = data;
+
+      var markup = this._generateMarkup();
+
+      this._clear();
+
+      this._parentElement.insertAdjacentHTML('afterbegin', markup);
+    }
+  }, {
+    key: "renderSpinner",
+    value: function renderSpinner() {
+      var markup = "\n          <div class=\"spinner\">\n            <svg>\n              <use href=\"".concat(_icons.default, "#icon-loader\"></use>\n            </svg>\n          </div>\n        ");
+
+      this._clear();
+
+      this._parentElement.insertAdjacentHTML('afterbegin', markup);
+    }
+  }, {
+    key: "_clear",
+    value: function _clear() {
+      this._parentElement.innerHTML = '';
+    } //Display Error Message
+
+  }, {
+    key: "renderError",
+    value: function renderError() {
+      var message = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this._errorMessage;
+      var markup = "\n      <div class=\"error\">\n        <div>\n          <svg>\n            <use href=\"".concat(_icons.default, "#icon-alert-triangle\"></use>\n          </svg>\n        </div>\n        <p>").concat(message, "</p>\n      </div>\n    ");
+
+      this._clear();
+
+      this._parentElement.insertAdjacentHTML('afterbegin', markup);
+    } //Display Success Message
+
+  }, {
+    key: "renderMessage",
+    value: function renderMessage() {
+      var message = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this._message;
+      var markup = "\n    <div class=\"message\">\n    <div>\n      <svg>\n        <use href=\"".concat(_icons.default, "#icon-smile\"></use>\n      </svg>\n    </div>\n    <p>").concat(message, "</p>\n  </div>\n    ");
+
+      this._clear();
+
+      this._parentElement.insertAdjacentHTML('afterbegin', markup);
+    }
+  }]);
+
+  return View;
+}();
+
+exports.default = View;
+},{"../../img/icons.svg":"src/img/icons.svg"}],"src/js/views/recipeView.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1458,7 +1539,11 @@ var _icons = _interopRequireDefault(require("../../img/icons.svg"));
 
 var _fractional = require("fractional");
 
+var _View2 = _interopRequireDefault(require("./View"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -1466,67 +1551,45 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 
-function _classPrivateMethodInitSpec(obj, privateSet) { _checkPrivateRedeclaration(obj, privateSet); privateSet.add(obj); }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
-function _classPrivateFieldInitSpec(obj, privateMap, value) { _checkPrivateRedeclaration(obj, privateMap); privateMap.set(obj, value); }
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
-function _checkPrivateRedeclaration(obj, privateCollection) { if (privateCollection.has(obj)) { throw new TypeError("Cannot initialize the same private elements twice on an object"); } }
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
-function _classPrivateFieldSet(receiver, privateMap, value) { var descriptor = _classExtractFieldDescriptor(receiver, privateMap, "set"); _classApplyDescriptorSet(receiver, descriptor, value); return value; }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
 
-function _classApplyDescriptorSet(receiver, descriptor, value) { if (descriptor.set) { descriptor.set.call(receiver, value); } else { if (!descriptor.writable) { throw new TypeError("attempted to set read only private field"); } descriptor.value = value; } }
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
-function _classPrivateMethodGet(receiver, privateSet, fn) { if (!privateSet.has(receiver)) { throw new TypeError("attempted to get private field on non-instance"); } return fn; }
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
 
-function _classPrivateFieldGet(receiver, privateMap) { var descriptor = _classExtractFieldDescriptor(receiver, privateMap, "get"); return _classApplyDescriptorGet(receiver, descriptor); }
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
-function _classExtractFieldDescriptor(receiver, privateMap, action) { if (!privateMap.has(receiver)) { throw new TypeError("attempted to " + action + " private field on non-instance"); } return privateMap.get(receiver); }
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-function _classApplyDescriptorGet(receiver, descriptor) { if (descriptor.get) { return descriptor.get.call(receiver); } return descriptor.value; }
+var RecipeView = /*#__PURE__*/function (_View) {
+  _inherits(RecipeView, _View);
 
-var _parentElement = /*#__PURE__*/new WeakMap();
+  var _super = _createSuper(RecipeView);
 
-var _data = /*#__PURE__*/new WeakMap();
-
-var _errorMessage = /*#__PURE__*/new WeakMap();
-
-var _message = /*#__PURE__*/new WeakMap();
-
-var _clear = /*#__PURE__*/new WeakSet();
-
-var _generateMarkup = /*#__PURE__*/new WeakSet();
-
-var _generateMarkupIngredient = /*#__PURE__*/new WeakSet();
-
-var RecipeView = /*#__PURE__*/function () {
   function RecipeView() {
+    var _this;
+
     _classCallCheck(this, RecipeView);
 
-    _classPrivateMethodInitSpec(this, _generateMarkupIngredient);
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
 
-    _classPrivateMethodInitSpec(this, _generateMarkup);
+    _this = _super.call.apply(_super, [this].concat(args));
 
-    _classPrivateMethodInitSpec(this, _clear);
+    _defineProperty(_assertThisInitialized(_this), "_parentElement", document.querySelector('.recipe'));
 
-    _classPrivateFieldInitSpec(this, _parentElement, {
-      writable: true,
-      value: document.querySelector('.recipe')
-    });
+    _defineProperty(_assertThisInitialized(_this), "_errorMessage", 'No recipes found for your query. Please try again!');
 
-    _classPrivateFieldInitSpec(this, _data, {
-      writable: true,
-      value: void 0
-    });
+    _defineProperty(_assertThisInitialized(_this), "_message", 'Start by searching for a recipe or an ingredient. Have fun!');
 
-    _classPrivateFieldInitSpec(this, _errorMessage, {
-      writable: true,
-      value: 'No recipes found for your query. Please try again!'
-    });
-
-    _classPrivateFieldInitSpec(this, _message, {
-      writable: true,
-      value: 'Start by searching for a recipe or an ingredient. Have fun!'
-    });
+    return _this;
   }
 
   _createClass(RecipeView, [{
@@ -1538,70 +1601,107 @@ var RecipeView = /*#__PURE__*/function () {
       ['load', 'hashchange'].forEach(function (ev) {
         return window.addEventListener(ev, handler);
       });
-    } //Display Error Message
-
-  }, {
-    key: "renderError",
-    value: function renderError() {
-      var message = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _classPrivateFieldGet(this, _errorMessage);
-      var markup = "\n      <div class=\"error\">\n        <div>\n          <svg>\n            <use href=\"".concat(_icons.default, "#icon-alert-triangle\"></use>\n          </svg>\n        </div>\n        <p>").concat(message, "</p>\n      </div>\n    ");
-
-      _classPrivateMethodGet(this, _clear, _clear2).call(this);
-
-      _classPrivateFieldGet(this, _parentElement).insertAdjacentHTML('afterbegin', markup);
-    } //Display Success Message
-
-  }, {
-    key: "renderMessage",
-    value: function renderMessage() {
-      var message = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _classPrivateFieldGet(this, _message);
-      var markup = "\n    <div class=\"message\">\n    <div>\n      <svg>\n        <use href=\"".concat(_icons.default, "#icon-smile\"></use>\n      </svg>\n    </div>\n    <p>").concat(message, "</p>\n  </div>\n    ");
-
-      _classPrivateMethodGet(this, _clear, _clear2).call(this);
-
-      _classPrivateFieldGet(this, _parentElement).insertAdjacentHTML('afterbegin', markup);
     }
   }, {
-    key: "render",
-    value: function render(data) {
-      _classPrivateFieldSet(this, _data, data);
-
-      var markup = _classPrivateMethodGet(this, _generateMarkup, _generateMarkup2).call(this);
-
-      _classPrivateMethodGet(this, _clear, _clear2).call(this);
-
-      _classPrivateFieldGet(this, _parentElement).insertAdjacentHTML('afterbegin', markup);
+    key: "_generateMarkup",
+    value: function _generateMarkup() {
+      return "\n        <figure class=\"recipe__fig\">\n        <img src=\"".concat(this._data.image, "\" alt=\"").concat(this._data.title, "\" class=\"recipe__img\" />\n        <h1 class=\"recipe__title\">\n          <span>").concat(this._data.title, "</span>\n        </h1>\n      </figure>\n\n      <div class=\"recipe__details\">\n        <div class=\"recipe__info\">\n          <svg class=\"recipe__info-icon\">\n            <use href=\"").concat(_icons.default, "#icon-clock\"></use>\n          </svg>\n          <span class=\"recipe__info-data recipe__info-data--minutes\">").concat(this._data.cookingTime, "</span>\n          <span class=\"recipe__info-text\">minutes</span>\n        </div>\n        <div class=\"recipe__info\">\n          <svg class=\"recipe__info-icon\">\n            <use href=\"").concat(_icons.default, "#icon-users\"></use>\n          </svg>\n          <span class=\"recipe__info-data recipe__info-data--people\">").concat(this._data.servings, "</span>\n          <span class=\"recipe__info-text\">servings</span>\n\n          <div class=\"recipe__info-buttons\">\n            <button class=\"btn--tiny btn--increase-servings\">\n              <svg>\n                <use href=\"").concat(_icons.default, "#icon-minus-circle\"></use>\n              </svg>\n            </button>\n            <button class=\"btn--tiny btn--increase-servings\">\n              <svg>\n                <use href=\"").concat(_icons.default, "#icon-plus-circle\"></use>\n              </svg>\n            </button>\n          </div>\n        </div>\n\n        <div class=\"recipe__user-generated\">\n          \n        </div>\n        <button class=\"btn--round\">\n          <svg class=\"\">\n            <use href=\"").concat(_icons.default, "#icon-bookmark-fill\"></use>\n          </svg>\n        </button>\n      </div>\n\n      <div class=\"recipe__ingredients\">\n        <h2 class=\"heading--2\">Recipe ingredients</h2>\n        <ul class=\"recipe__ingredient-list\">\n        ").concat(this._data.ingredients.map(this._generateMarkupIngredient).join(''), "\n        </ul>\n      </div>\n\n      <div class=\"recipe__directions\">\n        <h2 class=\"heading--2\">How to cook it</h2>\n        <p class=\"recipe__directions-text\">\n          This recipe was carefully designed and tested by\n          <span class=\"recipe__publisher\">").concat(this._data.publisher, "</span>. Please check out\n          directions at their website.\n        </p>\n        <a\n          class=\"btn--small recipe__btn\"\n          href=\"").concat(this._data.sourceUrl, "\"\n          target=\"_blank\"\n        >\n          <span>Directions</span>\n          <svg class=\"search__icon\">\n            <use href=\"").concat(_icons.default, "#icon-arrow-right\"></use>\n          </svg>\n        </a>\n      </div>\n        ");
     }
   }, {
-    key: "renderSpinner",
-    value: function renderSpinner() {
-      var markup = "\n          <div class=\"spinner\">\n            <svg>\n              <use href=\"".concat(_icons.default, "#icon-loader\"></use>\n            </svg>\n          </div>\n        ");
-
-      _classPrivateMethodGet(this, _clear, _clear2).call(this);
-
-      _classPrivateFieldGet(this, _parentElement).insertAdjacentHTML('afterbegin', markup);
+    key: "_generateMarkupIngredient",
+    value: function _generateMarkupIngredient(ingredient) {
+      return "\n    <li class=\"recipe__ingredient\">\n      <svg class=\"recipe__icon\">\n        <use href=\"".concat(_icons.default, "#icon-check\"></use>\n      </svg>\n      <div class=\"recipe__quantity\">").concat(ingredient.quantity ? new _fractional.Fraction(ingredient.quantity).toString() : '', "</div>\n      <div class=\"recipe__description\">\n        <span class=\"recipe__unit\">").concat(ingredient.unit, "</span>\n        ").concat(ingredient.description, "\n      </div>\n    </li>\n    ");
     }
   }]);
 
   return RecipeView;
-}();
-
-function _clear2() {
-  _classPrivateFieldGet(this, _parentElement).innerHTML = '';
-}
-
-function _generateMarkup2() {
-  return "\n        <figure class=\"recipe__fig\">\n        <img src=\"".concat(_classPrivateFieldGet(this, _data).image, "\" alt=\"").concat(_classPrivateFieldGet(this, _data).title, "\" class=\"recipe__img\" />\n        <h1 class=\"recipe__title\">\n          <span>").concat(_classPrivateFieldGet(this, _data).title, "</span>\n        </h1>\n      </figure>\n\n      <div class=\"recipe__details\">\n        <div class=\"recipe__info\">\n          <svg class=\"recipe__info-icon\">\n            <use href=\"").concat(_icons.default, "#icon-clock\"></use>\n          </svg>\n          <span class=\"recipe__info-data recipe__info-data--minutes\">").concat(_classPrivateFieldGet(this, _data).cookingTime, "</span>\n          <span class=\"recipe__info-text\">minutes</span>\n        </div>\n        <div class=\"recipe__info\">\n          <svg class=\"recipe__info-icon\">\n            <use href=\"").concat(_icons.default, "#icon-users\"></use>\n          </svg>\n          <span class=\"recipe__info-data recipe__info-data--people\">").concat(_classPrivateFieldGet(this, _data).servings, "</span>\n          <span class=\"recipe__info-text\">servings</span>\n\n          <div class=\"recipe__info-buttons\">\n            <button class=\"btn--tiny btn--increase-servings\">\n              <svg>\n                <use href=\"").concat(_icons.default, "#icon-minus-circle\"></use>\n              </svg>\n            </button>\n            <button class=\"btn--tiny btn--increase-servings\">\n              <svg>\n                <use href=\"").concat(_icons.default, "#icon-plus-circle\"></use>\n              </svg>\n            </button>\n          </div>\n        </div>\n\n        <div class=\"recipe__user-generated\">\n          <svg>\n            <use href=\"").concat(_icons.default, "#icon-user\"></use>\n          </svg>\n        </div>\n        <button class=\"btn--round\">\n          <svg class=\"\">\n            <use href=\"").concat(_icons.default, "#icon-bookmark-fill\"></use>\n          </svg>\n        </button>\n      </div>\n\n      <div class=\"recipe__ingredients\">\n        <h2 class=\"heading--2\">Recipe ingredients</h2>\n        <ul class=\"recipe__ingredient-list\">\n        ").concat(_classPrivateFieldGet(this, _data).ingredients.map(_classPrivateMethodGet(this, _generateMarkupIngredient, _generateMarkupIngredient2)).join(''), "\n        </ul>\n      </div>\n\n      <div class=\"recipe__directions\">\n        <h2 class=\"heading--2\">How to cook it</h2>\n        <p class=\"recipe__directions-text\">\n          This recipe was carefully designed and tested by\n          <span class=\"recipe__publisher\">").concat(_classPrivateFieldGet(this, _data).publisher, "</span>. Please check out\n          directions at their website.\n        </p>\n        <a\n          class=\"btn--small recipe__btn\"\n          href=\"").concat(_classPrivateFieldGet(this, _data).sourceUrl, "\"\n          target=\"_blank\"\n        >\n          <span>Directions</span>\n          <svg class=\"search__icon\">\n            <use href=\"").concat(_icons.default, "#icon-arrow-right\"></use>\n          </svg>\n        </a>\n      </div>\n        ");
-}
-
-function _generateMarkupIngredient2(ingredient) {
-  return "\n    <li class=\"recipe__ingredient\">\n      <svg class=\"recipe__icon\">\n        <use href=\"".concat(_icons.default, "#icon-check\"></use>\n      </svg>\n      <div class=\"recipe__quantity\">").concat(ingredient.quantity ? new _fractional.Fraction(ingredient.quantity).toString() : '', "</div>\n      <div class=\"recipe__description\">\n        <span class=\"recipe__unit\">").concat(ingredient.unit, "</span>\n        ").concat(ingredient.description, "\n      </div>\n    </li>\n    ");
-}
+}(_View2.default);
 
 var _default = new RecipeView();
 
 exports.default = _default;
-},{"../../img/icons.svg":"src/img/icons.svg","fractional":"node_modules/fractional/index.js"}],"src/js/views/searchView.js":[function(require,module,exports) {
+},{"../../img/icons.svg":"src/img/icons.svg","fractional":"node_modules/fractional/index.js","./View":"src/js/views/View.js"}],"src/js/views/resultsView.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _View2 = _interopRequireDefault(require("./View"));
+
+var _icons = _interopRequireDefault(require("../../img/icons.svg"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var ResultsView = /*#__PURE__*/function (_View) {
+  _inherits(ResultsView, _View);
+
+  var _super = _createSuper(ResultsView);
+
+  function ResultsView() {
+    var _this;
+
+    _classCallCheck(this, ResultsView);
+
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    _this = _super.call.apply(_super, [this].concat(args));
+
+    _defineProperty(_assertThisInitialized(_this), "_parentElement", document.querySelector('.results'));
+
+    _defineProperty(_assertThisInitialized(_this), "_errorMessage", 'No recipes found for your query. Please try again!');
+
+    _defineProperty(_assertThisInitialized(_this), "_message", 'Start by searching for a recipe or an ingredient. Have fun!');
+
+    return _this;
+  }
+
+  _createClass(ResultsView, [{
+    key: "_generateMarkup",
+    value: function _generateMarkup() {
+      return this._data.map(this._generateMarkupPreview).join('');
+    }
+  }, {
+    key: "_generateMarkupPreview",
+    value: function _generateMarkupPreview(result) {
+      return "\n        <li class=\"preview\">\n            <a class=\"preview__link\" href=\"#".concat(result.id, "\">\n                <figure class=\"preview__fig\">\n                    <img src=\"").concat(result.image, "\" alt=\"").concat(result.title, "\" />\n                </figure>\n                <div class=\"preview__data\">\n                    <h4 class=\"preview__title\">").concat(result.title, "</h4>\n                    <p class=\"preview__publisher\">").concat(result.publisher, "</p>\n                </div>\n            </a>\n        </li>\n        ");
+    }
+  }]);
+
+  return ResultsView;
+}(_View2.default);
+
+var _default = new ResultsView();
+
+exports.default = _default;
+},{"./View":"src/js/views/View.js","../../img/icons.svg":"src/img/icons.svg"}],"src/js/views/searchView.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1615,51 +1715,35 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 
-function _classPrivateMethodInitSpec(obj, privateSet) { _checkPrivateRedeclaration(obj, privateSet); privateSet.add(obj); }
-
-function _classPrivateFieldInitSpec(obj, privateMap, value) { _checkPrivateRedeclaration(obj, privateMap); privateMap.set(obj, value); }
-
-function _checkPrivateRedeclaration(obj, privateCollection) { if (privateCollection.has(obj)) { throw new TypeError("Cannot initialize the same private elements twice on an object"); } }
-
-function _classPrivateMethodGet(receiver, privateSet, fn) { if (!privateSet.has(receiver)) { throw new TypeError("attempted to get private field on non-instance"); } return fn; }
-
-function _classPrivateFieldGet(receiver, privateMap) { var descriptor = _classExtractFieldDescriptor(receiver, privateMap, "get"); return _classApplyDescriptorGet(receiver, descriptor); }
-
-function _classExtractFieldDescriptor(receiver, privateMap, action) { if (!privateMap.has(receiver)) { throw new TypeError("attempted to " + action + " private field on non-instance"); } return privateMap.get(receiver); }
-
-function _classApplyDescriptorGet(receiver, descriptor) { if (descriptor.get) { return descriptor.get.call(receiver); } return descriptor.value; }
-
-var _parentEl = /*#__PURE__*/new WeakMap();
-
-var _clearInput = /*#__PURE__*/new WeakSet();
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 var searchView = /*#__PURE__*/function () {
   function searchView() {
     _classCallCheck(this, searchView);
 
-    _classPrivateMethodInitSpec(this, _clearInput);
-
-    _classPrivateFieldInitSpec(this, _parentEl, {
-      writable: true,
-      value: document.querySelector('.search')
-    });
+    _defineProperty(this, "_parentElement", document.querySelector('.search'));
   }
 
   _createClass(searchView, [{
     key: "getQuery",
     value: function getQuery() {
-      var query = _classPrivateFieldGet(this, _parentEl).querySelector('.search__field').value;
+      var query = this._parentElement.querySelector('.search__field').value;
 
-      _classPrivateMethodGet(this, _clearInput, _clearInput2).call(this);
+      this._clearInput();
 
       return query;
     }
   }, {
+    key: "_clearInput",
+    value: function _clearInput() {
+      this._parentElement.querySelector('.search__field').value = '';
+    } //Publisher
+
+  }, {
     key: "addHandlerSearch",
-    value: //Publisher
-    function addHandlerSearch(handler) {
+    value: function addHandlerSearch(handler) {
       //Publisher publishing the event
-      _classPrivateFieldGet(this, _parentEl).addEventListener('submit', function (e) {
+      this._parentElement.addEventListener('submit', function (e) {
         e.preventDefault();
         handler();
       });
@@ -1668,10 +1752,6 @@ var searchView = /*#__PURE__*/function () {
 
   return searchView;
 }();
-
-function _clearInput2() {
-  _classPrivateFieldGet(this, _parentEl).querySelector('.search__field').value = '';
-}
 
 var _default = new searchView();
 
@@ -1685,6 +1765,8 @@ var model = _interopRequireWildcard(require("./model"));
 
 var _recipeView = _interopRequireDefault(require("./views/recipeView"));
 
+var _resultsView = _interopRequireDefault(require("./views/resultsView"));
+
 var _searchView = _interopRequireDefault(require("./views/searchView"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -1697,7 +1779,8 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
-///////////////////////////////////////
+if (module.hot) module.hot.accept(); ///////////////////////////////////////
+
 var controlRecipes = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
     var id;
@@ -1757,35 +1840,42 @@ var controlSearchResults = /*#__PURE__*/function () {
         switch (_context2.prev = _context2.next) {
           case 0:
             _context2.prev = 0;
-            // 1. Get Search Query
+
+            _resultsView.default.renderSpinner(); // 1. Get Search Query
+
+
             query = _searchView.default.getQuery();
 
             if (query) {
-              _context2.next = 4;
+              _context2.next = 5;
               break;
             }
 
             return _context2.abrupt("return");
 
-          case 4:
-            _context2.next = 6;
+          case 5:
+            _context2.next = 7;
             return model.loadSearchResults(query);
 
-          case 6:
-            _context2.next = 11;
+          case 7:
+            // 3. Render Search Results
+            _resultsView.default.render(model.state.search.results);
+
+            _context2.next = 13;
             break;
 
-          case 8:
-            _context2.prev = 8;
+          case 10:
+            _context2.prev = 10;
             _context2.t0 = _context2["catch"](0);
-            console.error("".concat(_context2.t0, "!"));
 
-          case 11:
+            _resultsView.default.renderError();
+
+          case 13:
           case "end":
             return _context2.stop();
         }
       }
-    }, _callee2, null, [[0, 8]]);
+    }, _callee2, null, [[0, 10]]);
   }));
 
   return function controlSearchResults() {
@@ -1801,7 +1891,7 @@ var init = function init() {
 };
 
 init();
-},{"regenerator-runtime/runtime":"node_modules/regenerator-runtime/runtime.js","./model":"src/js/model.js","./views/recipeView":"src/js/views/recipeView.js","./views/searchView":"src/js/views/searchView.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"regenerator-runtime/runtime":"node_modules/regenerator-runtime/runtime.js","./model":"src/js/model.js","./views/recipeView":"src/js/views/recipeView.js","./views/resultsView":"src/js/views/resultsView.js","./views/searchView":"src/js/views/searchView.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -1829,7 +1919,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57946" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64519" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
