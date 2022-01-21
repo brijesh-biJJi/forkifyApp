@@ -881,7 +881,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.TIMEOUT_SEC = exports.API_URL = void 0;
-var API_URL = 'https://forkify-api.herokuapp.com/api/v2/recipes';
+var API_URL = 'https://forkify-api.herokuapp.com/api/v2/recipes/';
 exports.API_URL = API_URL;
 var TIMEOUT_SEC = 10;
 exports.TIMEOUT_SEC = TIMEOUT_SEC;
@@ -961,7 +961,7 @@ exports.getJson = getJson;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.state = exports.loadRecipe = void 0;
+exports.state = exports.loadSearchResults = exports.loadRecipe = void 0;
 
 var _config = require("./config");
 
@@ -972,7 +972,11 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 var state = {
-  recipe: {}
+  recipe: {},
+  search: {
+    query: '',
+    results: []
+  }
 };
 exports.state = state;
 
@@ -1024,6 +1028,53 @@ var loadRecipe = /*#__PURE__*/function () {
 }();
 
 exports.loadRecipe = loadRecipe;
+
+var loadSearchResults = /*#__PURE__*/function () {
+  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(query) {
+    var data;
+    return regeneratorRuntime.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            _context2.prev = 0;
+            state.search.query = query;
+            _context2.next = 4;
+            return (0, _helpers.getJson)("".concat(_config.API_URL, "?search=").concat(query));
+
+          case 4:
+            data = _context2.sent;
+            state.search.results = data.data.recipes.map(function (rec) {
+              return {
+                id: rec.id,
+                title: rec.title,
+                publisher: rec.publisher,
+                image: rec.image_url
+              };
+            });
+            _context2.next = 12;
+            break;
+
+          case 8:
+            _context2.prev = 8;
+            _context2.t0 = _context2["catch"](0);
+            console.error("".concat(_context2.t0, "!"));
+            throw _context2.t0;
+
+          case 12:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2, null, [[0, 8]]);
+  }));
+
+  return function loadSearchResults(_x2) {
+    return _ref2.apply(this, arguments);
+  };
+}();
+
+exports.loadSearchResults = loadSearchResults;
+loadSearchResults('pizza');
 },{"./config":"src/js/config.js","./helpers":"src/js/helpers.js"}],"src/img/icons.svg":[function(require,module,exports) {
 module.exports = "/icons.ae3c38d5.svg";
 },{}],"node_modules/fractional/index.js":[function(require,module,exports) {
@@ -1550,7 +1601,82 @@ function _generateMarkupIngredient2(ingredient) {
 var _default = new RecipeView();
 
 exports.default = _default;
-},{"../../img/icons.svg":"src/img/icons.svg","fractional":"node_modules/fractional/index.js"}],"src/js/controller.js":[function(require,module,exports) {
+},{"../../img/icons.svg":"src/img/icons.svg","fractional":"node_modules/fractional/index.js"}],"src/js/views/searchView.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+
+function _classPrivateMethodInitSpec(obj, privateSet) { _checkPrivateRedeclaration(obj, privateSet); privateSet.add(obj); }
+
+function _classPrivateFieldInitSpec(obj, privateMap, value) { _checkPrivateRedeclaration(obj, privateMap); privateMap.set(obj, value); }
+
+function _checkPrivateRedeclaration(obj, privateCollection) { if (privateCollection.has(obj)) { throw new TypeError("Cannot initialize the same private elements twice on an object"); } }
+
+function _classPrivateMethodGet(receiver, privateSet, fn) { if (!privateSet.has(receiver)) { throw new TypeError("attempted to get private field on non-instance"); } return fn; }
+
+function _classPrivateFieldGet(receiver, privateMap) { var descriptor = _classExtractFieldDescriptor(receiver, privateMap, "get"); return _classApplyDescriptorGet(receiver, descriptor); }
+
+function _classExtractFieldDescriptor(receiver, privateMap, action) { if (!privateMap.has(receiver)) { throw new TypeError("attempted to " + action + " private field on non-instance"); } return privateMap.get(receiver); }
+
+function _classApplyDescriptorGet(receiver, descriptor) { if (descriptor.get) { return descriptor.get.call(receiver); } return descriptor.value; }
+
+var _parentEl = /*#__PURE__*/new WeakMap();
+
+var _clearInput = /*#__PURE__*/new WeakSet();
+
+var searchView = /*#__PURE__*/function () {
+  function searchView() {
+    _classCallCheck(this, searchView);
+
+    _classPrivateMethodInitSpec(this, _clearInput);
+
+    _classPrivateFieldInitSpec(this, _parentEl, {
+      writable: true,
+      value: document.querySelector('.search')
+    });
+  }
+
+  _createClass(searchView, [{
+    key: "getQuery",
+    value: function getQuery() {
+      var query = _classPrivateFieldGet(this, _parentEl).querySelector('.search__field').value;
+
+      _classPrivateMethodGet(this, _clearInput, _clearInput2).call(this);
+
+      return query;
+    }
+  }, {
+    key: "addHandlerSearch",
+    value: //Publisher
+    function addHandlerSearch(handler) {
+      //Publisher publishing the event
+      _classPrivateFieldGet(this, _parentEl).addEventListener('submit', function (e) {
+        e.preventDefault();
+        handler();
+      });
+    }
+  }]);
+
+  return searchView;
+}();
+
+function _clearInput2() {
+  _classPrivateFieldGet(this, _parentEl).querySelector('.search__field').value = '';
+}
+
+var _default = new searchView();
+
+exports.default = _default;
+},{}],"src/js/controller.js":[function(require,module,exports) {
 "use strict";
 
 require("regenerator-runtime/runtime");
@@ -1558,6 +1684,8 @@ require("regenerator-runtime/runtime");
 var model = _interopRequireWildcard(require("./model"));
 
 var _recipeView = _interopRequireDefault(require("./views/recipeView"));
+
+var _searchView = _interopRequireDefault(require("./views/searchView"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1569,7 +1697,6 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
-// https://forkify-api.herokuapp.com/v2
 ///////////////////////////////////////
 var controlRecipes = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
@@ -1619,14 +1746,62 @@ var controlRecipes = /*#__PURE__*/function () {
   return function controlRecipes() {
     return _ref.apply(this, arguments);
   };
-}();
+}(); //Subscriber
+
+
+var controlSearchResults = /*#__PURE__*/function () {
+  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+    var query;
+    return regeneratorRuntime.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            _context2.prev = 0;
+            // 1. Get Search Query
+            query = _searchView.default.getQuery();
+
+            if (query) {
+              _context2.next = 4;
+              break;
+            }
+
+            return _context2.abrupt("return");
+
+          case 4:
+            _context2.next = 6;
+            return model.loadSearchResults(query);
+
+          case 6:
+            _context2.next = 11;
+            break;
+
+          case 8:
+            _context2.prev = 8;
+            _context2.t0 = _context2["catch"](0);
+            console.error("".concat(_context2.t0, "!"));
+
+          case 11:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2, null, [[0, 8]]);
+  }));
+
+  return function controlSearchResults() {
+    return _ref2.apply(this, arguments);
+  };
+}(); //Subscribing to the Publisher
+
 
 var init = function init() {
   _recipeView.default.addHandlerRender(controlRecipes);
+
+  _searchView.default.addHandlerSearch(controlSearchResults);
 };
 
 init();
-},{"regenerator-runtime/runtime":"node_modules/regenerator-runtime/runtime.js","./model":"src/js/model.js","./views/recipeView":"src/js/views/recipeView.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"regenerator-runtime/runtime":"node_modules/regenerator-runtime/runtime.js","./model":"src/js/model.js","./views/recipeView":"src/js/views/recipeView.js","./views/searchView":"src/js/views/searchView.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -1654,7 +1829,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51601" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57946" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
