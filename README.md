@@ -28,10 +28,18 @@ Forkify Application is all about searching for Recipe or Ingredients & displayin
   - Store bookmark data in the browser using _local storage_.
   - On page load, read saved bookmarks from _local storage_ & display.
 
+## Project Planning (1)
+
 ### FlowChart for Recipe Loading (Part 1)
 
-![FlowChart](forkify-flowchart-part-1.png)
+![FlowChart 1](forkify-flowchart-part-1.png)
 
 ### Architecture for Recipe Loading
 
 ![Recipe Loading](forkify-architecture-recipe-loading.png)
+
+## Project Planning (2)
+
+### FlowChart (Part 2)
+
+![FlowChart 2](forkify-flowchart-part-2.png)
