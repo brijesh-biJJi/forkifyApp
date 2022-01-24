@@ -1,4 +1,4 @@
-import { API_URL } from './config';
+import { API_URL, RES_PER_PAGE } from './config';
 import { getJson } from './helpers';
 
 export const state = {
@@ -6,6 +6,8 @@ export const state = {
   search: {
     query: '',
     results: [],
+    resultsPerPage: RES_PER_PAGE,
+    page: 1,
   },
 };
 
@@ -50,4 +52,13 @@ export const loadSearchResults = async function (query) {
   }
 };
 
-loadSearchResults('pizza');
+export const getSearchResultsPage = function (page = state.search.page) {
+  state.search.page = page;
+  // (page - 1) * size
+  const start = (page - 1) * state.search.resultsPerPage;
+  // (page * size) - 1
+  //If your are using "slice" then => (page * size), becoz slice emit the last value
+  const end = page * state.search.resultsPerPage;
+
+  return state.search.results.slice(start, end);
+};
