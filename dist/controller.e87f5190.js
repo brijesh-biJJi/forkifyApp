@@ -1141,6 +1141,51 @@ var View = /*#__PURE__*/function () {
       this._clear();
 
       this._parentElement.insertAdjacentHTML('afterbegin', markup);
+    } // The only difference btw Render & Update method is, Update meth will only update texts and attributes in the DOM without having to re-render the entire view.
+
+    /* Updating the DOM only in places where the text or the attributes actually changed */
+
+  }, {
+    key: "update",
+    value: function update(data) {
+      // if (!data || (Array.isArray(data) && data.length === 0))
+      //   return this.renderError();
+      // Once we update the data we then wants the views data to become that new data
+      this._data = data; // We also wamt to generate new markup
+      // We need entire markup so that we can then compare it to the old markup
+      // So we create new markup but no render it, Instead all that we gona do is to generate this markup then compare new html to curr html, then only change text & attr that actually have changed from the old version to the new version
+
+      var newMarkup = this._generateMarkup(); // CreateContextualFragment meth. convert the string into real Dom Node Objects
+      // Like Virtual Dom - Dom that is not really living on the page but which lives in our memory
+      // And now we can use that Dom as if it is a real Dom on our pagex
+
+
+      var newDom = document.createRange().createContextualFragment(newMarkup); //New DOM Elements
+
+      var newElements = Array.from(newDom.querySelectorAll('*')); //Current DOM Elements
+
+      var currElements = Array.from(this._parentElement.querySelectorAll('*'));
+      newElements.forEach(function (newEle, i) {
+        var _newEle$firstChild;
+
+        var currEle = currElements[i]; // Comparing New and Original DOM element/node
+        // If its not equal then update
+        // So instead of updating entire DOM Tree , we are updating only necessary part of it
+        // Instead of replacing entire container, will replace if ele only contains text becoz thats the only thing we want to replace.
+
+        /* Updates changed TEXT*/
+
+        if (!newEle.isEqualNode(currEle) && ((_newEle$firstChild = newEle.firstChild) === null || _newEle$firstChild === void 0 ? void 0 : _newEle$firstChild.nodeValue.trim()) !== '') {
+          currEle.textContent = newEle.textContent;
+        } // Whenever an ele chnges we also wanted to change the attr
+
+        /* Updates changed ATTRIBUTES*/
+
+
+        if (!newEle.isEqualNode(currEle)) Array.from(newEle.attributes).forEach(function (attr) {
+          return currEle.setAttribute(attr.name, attr.value);
+        });
+      });
     }
   }, {
     key: "renderSpinner",
@@ -1843,7 +1888,8 @@ var ResultsView = /*#__PURE__*/function (_View) {
   }, {
     key: "_generateMarkupPreview",
     value: function _generateMarkupPreview(result) {
-      return "\n        <li class=\"preview\">\n            <a class=\"preview__link\" href=\"#".concat(result.id, "\">\n                <figure class=\"preview__fig\">\n                    <img src=\"").concat(result.image, "\" alt=\"").concat(result.title, "\" />\n                </figure>\n                <div class=\"preview__data\">\n                    <h4 class=\"preview__title\">").concat(result.title, "</h4>\n                    <p class=\"preview__publisher\">").concat(result.publisher, "</p>\n                </div>\n            </a>\n        </li>\n        ");
+      var id = window.location.hash.slice(1);
+      return "\n        <li class=\"preview\">\n            <a class=\"preview__link ".concat(result.id === id ? 'preview__link--active' : '', "\" href=\"#").concat(result.id, "\">\n                <figure class=\"preview__fig\">\n                    <img src=\"").concat(result.image, "\" alt=\"").concat(result.title, "\" />\n                </figure>\n                <div class=\"preview__data\">\n                    <h4 class=\"preview__title\">").concat(result.title, "</h4>\n                    <p class=\"preview__publisher\">").concat(result.publisher, "</p>\n                </div>\n            </a>\n        </li>\n        ");
     }
   }]);
 
@@ -1953,31 +1999,34 @@ var controlRecipes = /*#__PURE__*/function () {
             return _context.abrupt("return");
 
           case 4:
-            _recipeView.default.renderSpinner(); // 1. Loading Recipe
+            _recipeView.default.renderSpinner(); // 0. Update results view to mark selected search result
 
 
-            _context.next = 7;
+            _resultsView.default.update(model.getSearchResultsPage()); // 1. Loading Recipe
+
+
+            _context.next = 8;
             return model.loadRecipe(id);
 
-          case 7:
+          case 8:
             // 2. Rendering Recipe
             _recipeView.default.render(model.state.recipe);
 
-            _context.next = 13;
+            _context.next = 14;
             break;
 
-          case 10:
-            _context.prev = 10;
+          case 11:
+            _context.prev = 11;
             _context.t0 = _context["catch"](0);
 
             _recipeView.default.renderError();
 
-          case 13:
+          case 14:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, null, [[0, 10]]);
+    }, _callee, null, [[0, 11]]);
   }));
 
   return function controlRecipes() {
@@ -2052,8 +2101,9 @@ var controlPagination = function controlPagination(goToPage) {
 var controlServings = function controlServings(newServings) {
   //Update the Recipe Servings (in state)
   model.updateServings(newServings); //Update the Recipe View
+  // recipeView.render(model.state.recipe);
 
-  _recipeView.default.render(model.state.recipe);
+  _recipeView.default.update(model.state.recipe);
 }; //Subscribing to the Publisher
 
 
