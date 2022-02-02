@@ -2,11 +2,14 @@ import icons from '../../img/icons.svg';
 export default class View {
   _data;
 
-  render(data) {
+  render(data, render = true) {
     if (!data || (Array.isArray(data) && data.length === 0))
       return this.renderError();
     this._data = data;
     const markup = this._generateMarkup();
+
+    if (!render) return markup;
+
     this._clear();
     this._parentElement.insertAdjacentHTML('afterbegin', markup);
   }
@@ -21,14 +24,14 @@ export default class View {
     // Once we update the data we then wants the views data to become that new data
     this._data = data;
 
-    // We also wamt to generate new markup
+    // We also want to generate new markup
     // We need entire markup so that we can then compare it to the old markup
-    // So we create new markup but no render it, Instead all that we gona do is to generate this markup then compare new html to curr html, then only change text & attr that actually have changed from the old version to the new version
+    // So we create new markup but not render it, Instead all that we gona do is to generate this markup then compare new html to curr html, then only change text & attr that actually have changed from the old version to the new version
     const newMarkup = this._generateMarkup();
 
-    // CreateContextualFragment meth. convert the string into real Dom Node Objects
+    // CreateContextualFragment method convert the string into real Dom Node Objects
     // Like Virtual Dom - Dom that is not really living on the page but which lives in our memory
-    // And now we can use that Dom as if it is a real Dom on our pagex
+    // And now we can use that Dom as if it is a real Dom on our pages
 
     const newDom = document.createRange().createContextualFragment(newMarkup);
 
