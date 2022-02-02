@@ -61,4 +61,4 @@ Forkify Application is all about searching for Recipe or Ingredients & displayin
 
 ### FlowChart (Part 3)
 
-![FlowChart 3](forkify-flowchart-part-3.png)
+![FlowChart 3](forkify-flowchart-part.png)
