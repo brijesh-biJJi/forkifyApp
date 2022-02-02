@@ -30,6 +30,10 @@ Forkify Application is all about searching for Recipe or Ingredients & displayin
 
 ## Project Planning (1)
 
+- **Search Functionality: API search request.**
+- **Results with pagination.**
+- **Display Recipe.**
+
 ### FlowChart for Recipe Loading (Part 1)
 
 ![FlowChart 1](forkify-flowchart-part-1.png)
@@ -40,6 +44,21 @@ Forkify Application is all about searching for Recipe or Ingredients & displayin
 
 ## Project Planning (2)
 
+- **Change servings functionality.**
+- **Bookmarking Fnctionality.**
+- **Store Bookmark data in the browser.**
+- **On page load, read saved bookmarks.**
+
 ### FlowChart (Part 2)
 
 ![FlowChart 2](forkify-flowchart-part-2.png)
+
+## Project Planning (3)
+
+- **Own Recipe upload.**
+- **Own Recipe automatically bookmarked.**
+- **User can only see own recipes, bot from others.**
+
+### FlowChart (Part 3)
+
+![FlowChart 3](forkify-flowchart-part-3.png)
