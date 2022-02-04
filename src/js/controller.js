@@ -2,11 +2,13 @@
 import 'regenerator-runtime/runtime';
 
 import * as model from './model';
+import { MODAL_CLOSE_SEC } from './config';
 import paginationView from './views/paginationView';
 import recipeView from './views/recipeView';
 import resultsView from './views/resultsView';
 import searchView from './views/searchView';
 import bookmarksView from './views/bookmarksView';
+import addRecipeView from './views/addRecipeView';
 
 // if (module.hot) module.hot.accept();
 ///////////////////////////////////////
@@ -16,6 +18,7 @@ const controlRecipes = async () => {
 
     if (!id) return;
 
+    // Render Spinner
     recipeView.renderSpinner();
 
     // 0. Update results view to mark selected search result
@@ -90,6 +93,35 @@ const controlBookmark = function () {
   bookmarksView.render(model.state.bookmarks);
 };
 
+const controlAddRecipe = async function (newRecipe) {
+  try {
+    // Show loading Spinner
+    addRecipeView.renderSpinner();
+
+    //Upload the new Recipe Data
+    await model.uploadRecipe(newRecipe);
+
+    // Render Recipe
+    recipeView.render(model.state.recipe);
+
+    // Display Success Message
+    addRecipeView.renderMessage();
+
+    //Render Bookmark View
+    bookmarksView.render(model.state.bookmarks);
+
+    //Change Id in URL
+    window.history.pushState(null, '', `#${model.state.recipe.id}`);
+
+    //Close Form window
+    setTimeout(function () {
+      addRecipeView.toggleWindow();
+    }, MODAL_CLOSE_SEC * 1000);
+  } catch (error) {
+    addRecipeView.renderError(error.message);
+  }
+};
+
 //Subscribing to the Publisher
 const init = function () {
   bookmarksView.addHandlerRender(controlBookmark);
@@ -98,5 +130,6 @@ const init = function () {
   recipeView.addHandlerAddBookmark(controlAddBookmark);
   searchView.addHandlerSearch(controlSearchResults);
   paginationView.addHandlerClick(controlPagination);
+  addRecipeView.addHandlerUpload(controlAddRecipe);
 };
 init();
